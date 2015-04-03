@@ -21,6 +21,7 @@
 //设置写入超时 -1 表示不会使用超时
 #define WRITE_TIME_OUT -1
 
+//每次最多读取多少
 #define MAX_BUFFER 1024
 
 
@@ -87,10 +88,10 @@ static LGSocketServe *socketServe = nil;
 }
 
 
-- (void)sendMsgOnThread:(id)string
+- (void)sendMessage:(id)message
 {
-    //想服务器发送数据
-    NSData *cmdData = [string dataUsingEncoding:NSUTF8StringEncoding];
+    //像服务器发送数据
+    NSData *cmdData = [message dataUsingEncoding:NSUTF8StringEncoding];
     [self.socket writeData:cmdData withTimeout:WRITE_TIME_OUT tag:1];
 }
 
@@ -136,8 +137,6 @@ static LGSocketServe *socketServe = nil;
         }
     }
     
-    
-    
 }
 
 
@@ -169,23 +168,30 @@ static LGSocketServe *socketServe = nil;
 
 
 
-
+//接受消息成功之后回调
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-
-    //收到结果解析...
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-    NSLog(@"%@",dic);
+    //服务端返回消息数据量比较大时，可能分多次返回。所以在读取消息的时候，设置MAX_BUFFER表示每次最多读取多少，当data.length < MAX_BUFFER我们认为有可能是接受完一个完整的消息，然后才解析
+    if( data.length < MAX_BUFFER )
+    {
+        //收到结果解析...
+        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        NSLog(@"%@",dic);
+        //解析出来的消息，可以通过通知、代理、block等传出去
+    
+    }
+   
     
     [self.socket readDataWithTimeout:READ_TIME_OUT buffer:nil bufferOffset:0 maxLength:MAX_BUFFER tag:0];
     
 }
 
 
-
+//发送消息成功之后回调
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
-    [sock readDataWithTimeout:-1 buffer:nil bufferOffset:0 maxLength:MAX_BUFFER tag:0];
+    //读取消息
+    [self.socket readDataWithTimeout:-1 buffer:nil bufferOffset:0 maxLength:MAX_BUFFER tag:0];
 }
 
 

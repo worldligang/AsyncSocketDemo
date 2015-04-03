@@ -26,6 +26,8 @@
     socketServe.socket.userData = SocketOfflineByServer;
     [socketServe startConnectSocket];
     
+    //发送消息 @"hello world"只是举个列子，具体根据服务端的消息格式
+    [socketServe sendMessage:@"hello world"];
     
 }
 

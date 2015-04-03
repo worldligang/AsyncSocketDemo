@@ -31,7 +31,7 @@ enum{
 -(void)cutOffSocket;
 
 // 发送消息
-- (void)sendMsgOnThread:(id)string;
+- (void)sendMessage:(id)message;
 
 
 
