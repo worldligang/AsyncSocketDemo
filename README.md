@@ -3,7 +3,7 @@
 
 用socket可以实现像QQ那样发送即时消息的功能。客户端和服务端需要建立长连接，在长连接的情况下，发送消息。客户端可以发送心跳包来检测长连接。
 
-在iOS开发中使用socket，一般都是用第三方库AsyncSocket，不得不承认这个库确实很强大。下载地址[https://github.com/robbiehanson/CocoaAsyncSocket.git](CocoaAsyncSocket)。
+在iOS开发中使用socket，一般都是用第三方库AsyncSocket，不得不承认这个库确实很强大。下载地址[CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket.git)。
 
 使用AsyncSocket的时候可以做一层封装，根据需求提供几个接口出来。比如：连接、断开连接、发送消息等等。还有接受消息，接受到的消息可以通过通知、代理、block等传出去。
 
